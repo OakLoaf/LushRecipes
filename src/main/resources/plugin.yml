@@ -1,4 +1,4 @@
-name: PluginName
+name: LushRecipes
 version: ${project.version}
-main: org.lushplugins.pluginname.PluginName
+main: org.lushplugins.lushrecipes.LushRecipes
 api-version: '1.17'

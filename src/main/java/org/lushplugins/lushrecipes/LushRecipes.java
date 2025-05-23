@@ -1,9 +1,9 @@
-package org.lushplugins.pluginname;
+package org.lushplugins.lushrecipes;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class PluginName extends JavaPlugin {
-    private static PluginName plugin;
+public final class LushRecipes extends JavaPlugin {
+    private static LushRecipes plugin;
 
     @Override
     public void onLoad() {
@@ -20,7 +20,7 @@ public final class PluginName extends JavaPlugin {
         // Disable implementation
     }
 
-    public static PluginName getInstance() {
+    public static LushRecipes getInstance() {
         return plugin;
     }
 }
