@@ -1,23 +1,47 @@
 package org.lushplugins.lushrecipes;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.lushplugins.lushlib.LushLib;
+import org.lushplugins.lushlib.plugin.SpigotPlugin;
+import org.lushplugins.lushrecipes.api.RecipeAPI;
+import org.lushplugins.lushrecipes.command.RecipesCommand;
+import org.lushplugins.lushrecipes.config.ConfigManager;
+import revxrsal.commands.Lamp;
+import revxrsal.commands.bukkit.BukkitLamp;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 
-public final class LushRecipes extends JavaPlugin {
+public final class LushRecipes extends SpigotPlugin {
     private static LushRecipes plugin;
+
+    private RecipeAPI recipeHandler;
+    private ConfigManager configManager;
 
     @Override
     public void onLoad() {
         plugin = this;
+        LushLib.getInstance().enable(this);
     }
 
     @Override
     public void onEnable() {
-        // Enable implementation
+        this.recipeHandler = RecipeAPI.builder(this).build();
+        this.configManager = new ConfigManager();
+        this.configManager.reloadConfig();
+
+        Lamp<BukkitCommandActor> lamp = BukkitLamp.builder(this).build();
+        lamp.register(new RecipesCommand());
     }
 
     @Override
     public void onDisable() {
         // Disable implementation
+    }
+
+    public RecipeAPI getRecipeHandler() {
+        return recipeHandler;
+    }
+
+    public ConfigManager getConfigManager() {
+        return this.configManager;
     }
 
     public static LushRecipes getInstance() {

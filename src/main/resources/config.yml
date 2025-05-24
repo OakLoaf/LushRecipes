@@ -1,0 +1,40 @@
+show-in-recipe-book: true
+
+recipes-gui:
+  title: "Recipes"
+  buttons:
+    'r':
+      lore:
+        - "&r&oClick to view recipe"
+    '#':
+      material: lime_stained_glass_pane
+      display-name: "&r"
+    '>':
+      material: arrow
+      display-name: "&rNext Page"
+    '<':
+      material: arrow
+      display-name: "&rPrevious Page"
+  format:
+    - "#########"
+    - "#rrrrrrr#"
+    - "#rrrrrrr#"
+    - "#rrrrrrr#"
+    - "#rrrrrrr#"
+    - "###<#>###"
+
+recipe-gui:
+  buttons:
+    '#':
+      material: lime_stained_glass_pane
+      display-name: "&r"
+    'b':
+      material: barrier
+      display-name: "&rBack"
+  format:
+    - "#########"
+    - "##012####"
+    - "##345#o##"
+    - "##678####"
+    - "#########"
+    - "####b####"

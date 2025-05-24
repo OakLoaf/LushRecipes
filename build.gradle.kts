@@ -5,47 +5,90 @@ plugins {
     id("xyz.jpenilla.run-paper") version("2.2.4")
 }
 
-group = "org.lushplugins"
-version = "1.0.0"
+allprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "com.gradleup.shadow")
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven("https://oss.sonatype.org/content/groups/public/")
-    maven("https://repo.papermc.io/repository/maven-public/") // Paper
+    group = "org.lushplugins"
+    version = "1.0.0-alpha1"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://repo.papermc.io/repository/maven-public/") // Paper
+        maven("https://repo.lushplugins.org/snapshots") // LushLib
+    }
+
+    dependencies {
+        // Dependencies
+        compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+
+        // Libraries
+        compileOnly("org.jetbrains:annotations:26.0.2")
+    }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+
+        registerFeature("optional") {
+            usingSourceSet(sourceSets["main"])
+        }
+
+        withSourcesJar()
+    }
+
+    tasks {
+        withType<JavaCompile> {
+            options.encoding = "UTF-8"
+        }
+
+        shadowJar {
+            minimize()
+
+            archiveFileName.set("${project.name}-${project.version}.jar")
+        }
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "lushReleases"
+                url = uri("https://repo.lushplugins.org/releases")
+                credentials(PasswordCredentials::class)
+                authentication {
+                    isAllowInsecureProtocol = true
+                    create<BasicAuthentication>("basic")
+                }
+            }
+
+            maven {
+                name = "lushSnapshots"
+                url = uri("https://repo.lushplugins.org/snapshots")
+                credentials(PasswordCredentials::class)
+                authentication {
+                    isAllowInsecureProtocol = true
+                    create<BasicAuthentication>("basic")
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    // Dependencies
-    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-
     // Soft Dependencies
 
+    // Modules
+    implementation(project(":api"))
+
     // Libraries
-}
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
-    registerFeature("optional") {
-        usingSourceSet(sourceSets["main"])
-    }
-
-    withSourcesJar()
+    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.9")
+    implementation("io.github.revxrsal:lamp.bukkit:4.0.0-rc.9")
 }
 
 tasks {
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
-
-    shadowJar {
-        minimize()
-
-        archiveFileName.set("${project.name}-${project.version}.jar")
-    }
-
-    processResources{
+    processResources {
         filesMatching("plugin.yml") {
             expand(project.properties)
         }
@@ -55,34 +98,16 @@ tasks {
             expand("version" to rootProject.version)
         }
     }
+
+    runServer {
+        minecraftVersion("1.21.1")
+    }
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "lushReleases"
-            url = uri("https://repo.lushplugins.org/releases")
-            credentials(PasswordCredentials::class)
-            authentication {
-                isAllowInsecureProtocol = true
-                create<BasicAuthentication>("basic")
-            }
-        }
-
-        maven {
-            name = "lushSnapshots"
-            url = uri("https://repo.lushplugins.org/snapshots")
-            credentials(PasswordCredentials::class)
-            authentication {
-                isAllowInsecureProtocol = true
-                create<BasicAuthentication>("basic")
-            }
-        }
-    }
-
     publications {
         create<MavenPublication>("maven") {
-            groupId = rootProject.group.toString()
+            groupId = rootProject.group.toString() + ".lushrecipes"
             artifactId = rootProject.name
             version = rootProject.version.toString()
             from(project.components["java"])
