@@ -3,7 +3,6 @@ package org.lushplugins.lushrecipes.api.recipe;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -22,7 +21,7 @@ public class CraftingRecipe {
     private final boolean shapeless;
     private final boolean inRecipeBook;
 
-    private CraftingRecipe(NamespacedKey key, DisplayItemStack[] ingredients, DisplayItemStack result, boolean shapeless, boolean inRecipeBook) {
+    protected CraftingRecipe(NamespacedKey key, DisplayItemStack[] ingredients, DisplayItemStack result, boolean shapeless, boolean inRecipeBook) {
         this.key = key;
         this.ingredients = ingredients;
         this.result = result;
