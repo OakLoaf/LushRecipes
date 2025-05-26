@@ -83,7 +83,7 @@ dependencies {
     implementation(project(":api"))
 
     // Libraries
-    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.9")
+    implementation("io.github.revxrsal:lamp.common:4.0.0-rc.12")
     implementation("io.github.revxrsal:lamp.bukkit:4.0.0-rc.9")
 }
 
