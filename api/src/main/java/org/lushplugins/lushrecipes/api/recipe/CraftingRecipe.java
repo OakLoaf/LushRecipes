@@ -54,7 +54,7 @@ public class CraftingRecipe {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isCustom() {
-        return !this.inRecipeBook || Arrays.stream(this.ingredients).anyMatch(DisplayItemStack::hasMeta);
+        return !this.inRecipeBook || Arrays.stream(this.ingredients).anyMatch(ingredient -> ingredient != null && ingredient.hasMeta());
     }
 
     public boolean matchesRecipe(ItemStack[] ingredients) {
