@@ -142,7 +142,7 @@ public class ConfigManager {
         }
 
         try {
-            LushRecipes.getInstance().getRecipeHandler().registerRecipe(key, recipeBuilder.build());
+            LushRecipes.getInstance().getRecipeHandler().registerRecipe(recipeBuilder.build());
         } catch (IllegalArgumentException e) {
             LushRecipes.getInstance().getLogger().log(Level.WARNING, "Failed to load recipe: " + config.getName(), e);
         }
