@@ -1,71 +1,71 @@
 package org.lushplugins.lushrecipes.gui;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.lushplugins.lushlib.gui.inventory.GuiLayer;
-import org.lushplugins.lushlib.gui.inventory.PagedGui;
-import org.lushplugins.lushlib.libraries.chatcolor.ChatColorHandler;
+import org.lushplugins.guihandler.annotation.ButtonProvider;
+import org.lushplugins.guihandler.annotation.CustomGui;
+import org.lushplugins.guihandler.annotation.GuiEvent;
+import org.lushplugins.guihandler.annotation.Slots;
+import org.lushplugins.guihandler.gui.Gui;
+import org.lushplugins.guihandler.gui.GuiAction;
+import org.lushplugins.guihandler.gui.GuiActor;
+import org.lushplugins.guihandler.slot.IconProvider;
+import org.lushplugins.guihandler.slot.Slot;
 import org.lushplugins.lushlib.utils.DisplayItemStack;
 import org.lushplugins.lushrecipes.LushRecipes;
-import org.lushplugins.lushrecipes.gui.button.RecipeButton;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
-import org.lushplugins.lushrecipes.gui.button.UnknownButton;
 
+import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RecipesGui extends PagedGui {
-    private final DisplayItemStack buttonBase;
-    private final List<Integer> recipeSlots;
+@SuppressWarnings("unused")
+@CustomGui
+public class RecipesGui {
 
-    public RecipesGui(List<GuiLayer> layers, String title, Player player) {
-        super(layers, ChatColorHandler.translate(title), player);
-
-        this.buttonBase = this.getButtons().values().stream()
-            .filter(button -> button instanceof UnknownButton unknownButton && unknownButton.getLabel() == 'r')
-            .map(button -> ((UnknownButton) button).getItem())
-            .findFirst()
-            .orElse(null);
-        this.recipeSlots = this.getButtons().entrySet().stream()
-            .filter(entry -> entry.getValue() instanceof UnknownButton button && button.getLabel() == 'r')
-            .map(Map.Entry::getKey)
-            .sorted()
-            .collect(Collectors.toList());
-        this.refresh();
-    }
-
-    @Override
-    public void refresh() {
-        super.refresh();
-
-        List<CraftingRecipe> recipes = LushRecipes.getInstance().getRecipeHandler().getRecipes().stream()
+    @GuiEvent(GuiAction.REFRESH)
+    public void recipes(GuiActor actor, @Slots('r') List<Slot> slots) {
+        ArrayDeque<CraftingRecipe> recipes = LushRecipes.getInstance().getRecipeHandler().getRecipes().stream()
             .sorted(Comparator.comparing(o -> o.getKey().asString()))
-            .toList();
+            .collect(Collectors.toCollection(ArrayDeque::new));
 
-        int index = 0;
-        for (int slot : this.recipeSlots) {
-            if (index >= recipes.size()) {
-                break;
+        for (Slot slot : slots) {
+            if (recipes.isEmpty()) {
+                slot.iconProvider(IconProvider.EMPTY);
+                continue;
             }
 
-            CraftingRecipe recipe = recipes.get(index);
+            CraftingRecipe recipe = recipes.pop();
             DisplayItemStack result = recipe.getResult();
-            DisplayItemStack displayItemStack = this.buttonBase;
-            if (displayItemStack != null) {
-                result = DisplayItemStack.builder(displayItemStack)
+
+            DisplayItemStack template = LushRecipes.getInstance().getConfigManager().getRecipeTemplate();
+            if (template != null) {
+                result = DisplayItemStack.builder(template)
                     .overwrite(DisplayItemStack.builder(result))
                     .build();
             }
 
-            addButton(slot, new RecipeButton(result, recipe.getKey()));
-            index++;
+            slot.icon(result.asItemStack(actor.player()));
+            slot.button((context) -> {
+                Gui.Builder gui = LushRecipes.getInstance().getConfigManager().getRecipeGuiBlueprint();
+
+                Player player = context.gui().actor().player();
+                if (recipe.getResult().hasDisplayName()) {
+                    gui.openWith(player, recipe.getResult().getDisplayName(), recipe);
+                } else {
+                    gui.open(player, recipe);
+                }
+            });
         }
     }
 
-    @Override
-    public void onClick(InventoryClickEvent event) {
-        super.onClick(event, true);
+    @ButtonProvider('>')
+    public void nextPage(Gui gui) {
+        gui.nextPage();
+    }
+
+    @ButtonProvider('<')
+    public void previousPage(Gui gui) {
+        gui.previousPage();
     }
 }

@@ -6,12 +6,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Recipe;
-import org.lushplugins.lushlib.gui.inventory.GuiBlueprint;
+import org.lushplugins.guihandler.gui.Gui;
 import org.lushplugins.lushlib.utils.DisplayItemStack;
 import org.lushplugins.lushlib.utils.YamlUtils;
 import org.lushplugins.lushlib.utils.converter.YamlConverter;
 import org.lushplugins.lushrecipes.LushRecipes;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
+import org.lushplugins.lushrecipes.gui.RecipeGui;
+import org.lushplugins.lushrecipes.gui.RecipesGui;
 import org.lushplugins.lushrecipes.utils.YamlUtil;
 
 import java.io.File;
@@ -25,8 +27,9 @@ import java.util.logging.Level;
 
 public class ConfigManager {
     private boolean showInRecipeBook;
-    private GuiBlueprint recipesGuiBlueprint;
-    private GuiBlueprint recipeGuiBlueprint;
+    private Gui.Builder recipesGuiBlueprint;
+    private Gui.Builder recipeGuiBlueprint;
+    private DisplayItemStack recipeTemplate;
 
     public ConfigManager() {
         LushRecipes plugin = LushRecipes.getInstance();
@@ -38,6 +41,7 @@ public class ConfigManager {
     }
 
     public void reloadConfig() {
+        LushRecipes.getInstance().reloadConfig();
         ConfigurationSection config = LushRecipes.getInstance().getConfig();
         this.showInRecipeBook = config.getBoolean("show-in-recipe-book", true);
 
@@ -47,10 +51,10 @@ public class ConfigManager {
         applyRecipes();
 
         ConfigurationSection recipesGuiSection = config.getConfigurationSection("recipes-gui");
-        this.recipesGuiBlueprint = recipesGuiSection != null ? YamlUtil.getGuiBlueprint(recipesGuiSection) : null;
+        this.recipesGuiBlueprint = YamlUtil.prepareGuiBuilder(recipesGuiSection, new RecipesGui());
 
         ConfigurationSection recipeGuiSection = config.getConfigurationSection("recipe-gui");
-        this.recipeGuiBlueprint = recipeGuiSection != null ? YamlUtil.getGuiBlueprint(recipeGuiSection) : null;
+        this.recipeGuiBlueprint = YamlUtil.prepareGuiBuilder(recipeGuiSection, new RecipeGui());
     }
 
     public void applyRecipes() {
@@ -79,12 +83,20 @@ public class ConfigManager {
         return showInRecipeBook;
     }
 
-    public GuiBlueprint getRecipesGuiBlueprint() {
+    public Gui.Builder getRecipesGuiBlueprint() {
         return this.recipesGuiBlueprint;
     }
 
-    public GuiBlueprint getRecipeGuiBlueprint() {
+    public Gui.Builder getRecipeGuiBlueprint() {
         return this.recipeGuiBlueprint;
+    }
+
+    public DisplayItemStack getRecipeTemplate() {
+        return recipeTemplate;
+    }
+
+    public void setRecipeTemplate(DisplayItemStack recipeTemplate) {
+        this.recipeTemplate = recipeTemplate;
     }
 
     /**

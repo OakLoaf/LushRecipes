@@ -1,5 +1,9 @@
 package org.lushplugins.lushrecipes;
 
+import org.lushplugins.guihandler.GuiHandler;
+import org.lushplugins.guihandler.slot.Button;
+import org.lushplugins.guihandler.slot.IconProvider;
+import org.lushplugins.guihandler.slot.SlotProvider;
 import org.lushplugins.lushlib.LushLib;
 import org.lushplugins.lushlib.plugin.SpigotPlugin;
 import org.lushplugins.lushrecipes.api.RecipeAPI;
@@ -13,6 +17,7 @@ public final class LushRecipes extends SpigotPlugin {
     private static LushRecipes plugin;
 
     private RecipeAPI recipeHandler;
+    private GuiHandler guiHandler;
     private ConfigManager configManager;
 
     @Override
@@ -24,6 +29,16 @@ public final class LushRecipes extends SpigotPlugin {
     @Override
     public void onEnable() {
         this.recipeHandler = RecipeAPI.builder(this).build();
+        this.guiHandler = GuiHandler.builder(this)
+            .registerLabelProvider(' ', SlotProvider.create(IconProvider.EMPTY))
+            .registerLabelProvider('>', SlotProvider.create((Button) (context) -> context.gui().nextPage()))
+            .registerLabelProvider('<', SlotProvider.create((Button) (context) -> context.gui().previousPage()))
+            .registerLabelProvider('b', SlotProvider.create((context) -> {
+                LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
+                    .open(context.gui().actor().player());
+            }))
+            .build();
+
         this.configManager = new ConfigManager();
         this.configManager.reloadConfig();
 
@@ -38,6 +53,10 @@ public final class LushRecipes extends SpigotPlugin {
 
     public RecipeAPI getRecipeHandler() {
         return recipeHandler;
+    }
+
+    public GuiHandler getGuiHandler() {
+        return guiHandler;
     }
 
     public ConfigManager getConfigManager() {

@@ -1,50 +1,60 @@
 package org.lushplugins.lushrecipes.utils;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.NotNull;
-import org.lushplugins.lushlib.gui.button.Button;
-import org.lushplugins.lushlib.gui.button.SimpleItemButton;
-import org.lushplugins.lushlib.gui.button.type.NextPageButton;
-import org.lushplugins.lushlib.gui.button.type.PreviousPageButton;
-import org.lushplugins.lushlib.gui.inventory.GuiBlueprint;
-import org.lushplugins.lushlib.gui.inventory.GuiLayer;
+import org.lushplugins.guihandler.gui.Gui;
+import org.lushplugins.guihandler.gui.GuiLayer;
+import org.lushplugins.guihandler.slot.Button;
+import org.lushplugins.guihandler.slot.SlotProvider;
 import org.lushplugins.lushlib.utils.DisplayItemStack;
 import org.lushplugins.lushlib.utils.YamlUtils;
-import org.lushplugins.lushrecipes.gui.button.*;
+import org.lushplugins.lushlib.utils.converter.YamlConverter;
+import org.lushplugins.lushrecipes.LushRecipes;
 
 public class YamlUtil {
 
-    // TODO: Replace with some form of Gui library
-    public static GuiBlueprint getGuiBlueprint(@NotNull ConfigurationSection guiConfig) {
-        GuiLayer layer = new GuiLayer(guiConfig.getStringList("format"));
-
-        for (ConfigurationSection buttonSection : YamlUtils.getConfigurationSections(guiConfig, "buttons")) {
-            DisplayItemStack item = org.lushplugins.lushlib.utils.converter.YamlConverter.getDisplayItem(buttonSection);
-
-            char label = buttonSection.getName().charAt(0);
-            String type = buttonSection.isString("type") ? buttonSection.getString("type") : switch (label) {
-                case 'b' -> "back";
-                case '<' -> "previous_page";
-                case '>' -> "next_page";
-                default -> null;
-            };
-
-            Button button = switch (type) {
-                case "back" -> new MainMenuButton(item);
-                case "previous_page" -> new PreviousPageButton(item);
-                case "next_page" -> new NextPageButton(item);
-                case null, default -> switch (label) {
-                    case 'o', 'r' -> new UnknownButton(label, item);
-                    default -> Character.isDigit(label) ? new UnknownButton(label, item) : new SimpleItemButton(item);
-                };
-            };
-
-            layer.setButton(label, button);
+    public static Gui.Builder prepareGuiBuilder(ConfigurationSection config, Object instance) {
+        if (config == null) {
+            return null;
         }
 
-        return new GuiBlueprint(
-            guiConfig.getString("title"),
-            layer
-        );
+        String title = config.getString("title");
+        GuiLayer layer = new GuiLayer(config.getStringList("format"));
+        for (ConfigurationSection buttonSection : YamlUtils.getConfigurationSections(config, "buttons")) {
+            DisplayItemStack item = YamlConverter.getDisplayItem(buttonSection);
+
+            char label = buttonSection.getName().charAt(0);
+            Button button = switch (buttonSection.getString("type")) {
+                case "back" -> (context) -> LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
+                    .open(context.gui().actor().player());
+                case "previous_page" -> (context) -> context.gui().previousPage();
+                case "next_page" -> (context) -> context.gui().nextPage();
+                case null, default -> Button.EMPTY;
+            };
+
+            layer.setSlotProvider(label, new SlotProvider(
+                (context) -> item.hasType() ? item.asItemStack(context.gui().actor().player()) : null,
+                button
+            ));
+
+            if (label == 'r') {
+                LushRecipes.getInstance().getConfigManager().setRecipeTemplate(item);
+            }
+        }
+
+        Gui.Builder builder;
+        if (instance != null) {
+            builder = LushRecipes.getInstance().getGuiHandler().prepare(instance);
+        } else {
+            builder = LushRecipes.getInstance().getGuiHandler().guiBuilder();
+        }
+
+        if (title != null) {
+            builder.title(title);
+        }
+
+        return builder
+            .size(layer.getSize())
+            .locked(true)
+            .applyLayer(layer);
     }
 }

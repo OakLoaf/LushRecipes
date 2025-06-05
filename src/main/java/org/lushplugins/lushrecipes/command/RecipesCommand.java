@@ -1,10 +1,7 @@
 package org.lushplugins.lushrecipes.command;
 
-import org.bukkit.entity.Player;
-import org.lushplugins.lushlib.gui.inventory.GuiBlueprint;
 import org.lushplugins.lushlib.libraries.chatcolor.ChatColorHandler;
 import org.lushplugins.lushrecipes.LushRecipes;
-import org.lushplugins.lushrecipes.gui.RecipesGui;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
@@ -18,8 +15,7 @@ public class RecipesCommand {
     public void recipes(BukkitCommandActor actor) {
         actor.requirePlayer();
 
-        GuiBlueprint blueprint = LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint();
-        blueprint.construct(actor.asPlayer(), RecipesGui::new).open();
+        LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint().open(actor.asPlayer());
     }
 
     @Subcommand("reload")
