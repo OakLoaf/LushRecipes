@@ -128,6 +128,10 @@ public class CraftingRecipe {
         return unmatchedIngredients.isEmpty();
     }
 
+    public Predicate<HumanEntity> getCraftPredicate() {
+        return craftPredicate;
+    }
+
     public boolean canCraft(HumanEntity crafter) {
         return this.craftPredicate.test(crafter);
     }
