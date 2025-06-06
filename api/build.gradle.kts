@@ -2,6 +2,12 @@ dependencies {
     api("org.lushplugins:LushLib:0.10.73")
 }
 
+tasks {
+    shadowJar {
+        relocate("org.lushplugins.lushlib", "org.lushplugins.lushrecipes.api.libraries.lushlib")
+    }
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {

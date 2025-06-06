@@ -89,6 +89,12 @@ dependencies {
 }
 
 tasks {
+    shadowJar {
+        relocate("org.lushplugins.lushrecipes.api", "org.lushplugins.lushrecipes.libraries.recipes")
+        relocate("revxrsal.commands", "org.lushplugins.lushrecipes.libraries.lamp")
+        relocate("org.lushplugins.guihandler", "org.lushplugins.lushrecipes.libraries.guihandler")
+    }
+
     processResources {
         filesMatching("plugin.yml") {
             expand(project.properties)
