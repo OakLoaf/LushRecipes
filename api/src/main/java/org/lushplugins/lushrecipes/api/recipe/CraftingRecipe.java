@@ -200,7 +200,7 @@ public class CraftingRecipe {
         private DisplayItemStack result;
         private boolean shapeless = false;
         private boolean inRecipeBook = true;
-        private Predicate<HumanEntity> craftPredicate;
+        private Predicate<HumanEntity> craftPredicate = (crafter) -> true;
 
         private Builder(@NotNull NamespacedKey key) {
             this.key = key;
