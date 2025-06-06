@@ -29,6 +29,7 @@ public class RecipesGui {
         ArrayDeque<CraftingRecipe> recipes = Streams.concat(
                 LushRecipes.getInstance().getRecipeHandler().getRecipes().stream(),
                 LushRecipes.getInstance().getConfigManager().getVisualRecipes().stream())
+            .filter(recipe -> recipe.canCraft(actor.player()))
             .sorted(Comparator.comparing(o -> o.getKey().asString()))
             .collect(Collectors.toCollection(ArrayDeque::new));
 

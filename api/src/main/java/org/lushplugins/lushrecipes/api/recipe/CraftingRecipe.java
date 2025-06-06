@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lushplugins.lushlib.utils.DisplayItemStack;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -20,13 +21,15 @@ public class CraftingRecipe {
     private final DisplayItemStack result;
     private final boolean shapeless;
     private final boolean inRecipeBook;
+    private final Predicate<HumanEntity> craftPredicate;
 
-    protected CraftingRecipe(NamespacedKey key, DisplayItemStack[] ingredients, DisplayItemStack result, boolean shapeless, boolean inRecipeBook) {
+    protected CraftingRecipe(NamespacedKey key, DisplayItemStack[] ingredients, DisplayItemStack result, boolean shapeless, boolean inRecipeBook, Predicate<HumanEntity> craftPredicate) {
         this.key = key;
         this.ingredients = ingredients;
         this.result = result;
         this.shapeless = shapeless;
         this.inRecipeBook = inRecipeBook;
+        this.craftPredicate = craftPredicate;
     }
 
     public @NotNull NamespacedKey getKey() {
@@ -126,7 +129,7 @@ public class CraftingRecipe {
     }
 
     public boolean canCraft(HumanEntity crafter) {
-        return true;
+        return this.craftPredicate.test(crafter);
     }
 
     public org.bukkit.inventory.CraftingRecipe createBukkitRecipe() {
@@ -189,6 +192,7 @@ public class CraftingRecipe {
         private DisplayItemStack result;
         private boolean shapeless = false;
         private boolean inRecipeBook = true;
+        private Predicate<HumanEntity> craftPredicate;
 
         private Builder(@NotNull NamespacedKey key) {
             this.key = key;
@@ -248,6 +252,14 @@ public class CraftingRecipe {
         }
 
         /**
+         * @param craftPredicate the predicate that must be matched for a recipe to be crafted
+         */
+        public Builder craftPredicate(Predicate<HumanEntity> craftPredicate) {
+            this.craftPredicate = craftPredicate;
+            return this;
+        }
+
+        /**
          * @return a built recipe
          */
         public CraftingRecipe build() {
@@ -255,7 +267,7 @@ public class CraftingRecipe {
                 throw new IllegalArgumentException("Crafting recipe requires a result");
             }
 
-            return new CraftingRecipe(this.key, this.ingredients, this.result, this.shapeless, this.inRecipeBook);
+            return new CraftingRecipe(this.key, this.ingredients, this.result, this.shapeless, this.inRecipeBook, this.craftPredicate);
         }
     }
 }

@@ -11,7 +11,7 @@ allprojects {
     apply(plugin = "com.gradleup.shadow")
 
     group = "org.lushplugins"
-    version = "1.0.0-alpha7"
+    version = "1.0.0-alpha11"
 
     repositories {
         mavenLocal()
@@ -90,6 +90,7 @@ dependencies {
 
 tasks {
     shadowJar {
+        relocate("org.lushplugins.lushlib", "org.lushplugins.lushrecipes.libraries.lushlib")
         relocate("org.lushplugins.lushrecipes.api", "org.lushplugins.lushrecipes.libraries.recipes")
         relocate("revxrsal.commands", "org.lushplugins.lushrecipes.libraries.lamp")
         relocate("org.lushplugins.guihandler", "org.lushplugins.lushrecipes.libraries.guihandler")
