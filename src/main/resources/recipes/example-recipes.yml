@@ -23,3 +23,17 @@ custom:gunpowder_stick:
     material: stick
     display-name: "Gunpowder Stick"
     custom-model-data: 1
+
+custom:flying_fish:
+  visual-only: true
+  ingredients:
+    '0':
+      material: feather
+    '1':
+      material: cod
+    '2':
+      material: feather
+  result:
+    material: cod
+    display-name: "Flying Fish"
+    custom-model-data: 1

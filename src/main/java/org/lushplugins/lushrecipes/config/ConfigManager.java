@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,6 +31,7 @@ public class ConfigManager {
     private Gui.Builder recipesGuiBlueprint;
     private Gui.Builder recipeGuiBlueprint;
     private DisplayItemStack recipeTemplate;
+    private List<CraftingRecipe> visualRecipes;
 
     public ConfigManager() {
         LushRecipes plugin = LushRecipes.getInstance();
@@ -45,6 +47,7 @@ public class ConfigManager {
         ConfigurationSection config = LushRecipes.getInstance().getConfig();
         this.showInRecipeBook = config.getBoolean("show-in-recipe-book", true);
 
+        this.visualRecipes = new ArrayList<>();
         LushRecipes.getInstance().getRecipeHandler().clearRecipes();
         loadRecipesFromDirectory(new File(LushRecipes.getInstance().getDataFolder(), "recipes"));
 
@@ -99,6 +102,14 @@ public class ConfigManager {
         this.recipeTemplate = recipeTemplate;
     }
 
+    public List<CraftingRecipe> getVisualRecipes() {
+        return visualRecipes;
+    }
+
+    public void addVisualOnlyRecipe(CraftingRecipe recipe) {
+        this.visualRecipes.add(recipe);
+    }
+
     /**
      * Read all drop files in a directory
      * @param directory directory to read from
@@ -133,9 +144,10 @@ public class ConfigManager {
         NamespacedKey key = NamespacedKey.fromString(config.getName());
         CraftingRecipe.Builder recipeBuilder = CraftingRecipe.builder(key);
 
-        boolean shapeless = config.getBoolean("shapeless");
+        boolean visualOnly = config.getBoolean("visual-only", false);
+        boolean shapeless = config.getBoolean("shapeless", false);
         recipeBuilder.shapeless(shapeless);
-        recipeBuilder.showInRecipeBook(showInRecipeBook);
+        recipeBuilder.showInRecipeBook(this.showInRecipeBook);
 
         List<ConfigurationSection> ingredientSections = YamlUtils.getConfigurationSections(config, "ingredients");
         for (ConfigurationSection ingredientSection : ingredientSections) {
@@ -154,7 +166,12 @@ public class ConfigManager {
         }
 
         try {
-            LushRecipes.getInstance().getRecipeHandler().registerRecipe(recipeBuilder.build());
+            CraftingRecipe recipe = recipeBuilder.build();
+            if (visualOnly) {
+                this.addVisualOnlyRecipe(recipe);
+            } else {
+                LushRecipes.getInstance().getRecipeHandler().registerRecipe(recipe);
+            }
         } catch (IllegalArgumentException e) {
             LushRecipes.getInstance().getLogger().log(Level.WARNING, "Failed to load recipe: " + config.getName(), e);
         }

@@ -1,5 +1,6 @@
 package org.lushplugins.lushrecipes.gui;
 
+import com.google.common.collect.Streams;
 import org.bukkit.entity.Player;
 import org.lushplugins.guihandler.annotation.ButtonProvider;
 import org.lushplugins.guihandler.annotation.CustomGui;
@@ -25,7 +26,9 @@ public class RecipesGui {
 
     @GuiEvent(GuiAction.REFRESH)
     public void recipes(GuiActor actor, @Slots('r') List<Slot> slots) {
-        ArrayDeque<CraftingRecipe> recipes = LushRecipes.getInstance().getRecipeHandler().getRecipes().stream()
+        ArrayDeque<CraftingRecipe> recipes = Streams.concat(
+                LushRecipes.getInstance().getRecipeHandler().getRecipes().stream(),
+                LushRecipes.getInstance().getConfigManager().getVisualRecipes().stream())
             .sorted(Comparator.comparing(o -> o.getKey().asString()))
             .collect(Collectors.toCollection(ArrayDeque::new));
 
