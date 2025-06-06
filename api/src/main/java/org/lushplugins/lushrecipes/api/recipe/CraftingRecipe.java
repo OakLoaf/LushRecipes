@@ -32,6 +32,10 @@ public class CraftingRecipe {
         this.craftPredicate = craftPredicate;
     }
 
+    protected CraftingRecipe(NamespacedKey key, DisplayItemStack[] ingredients, DisplayItemStack result, boolean shapeless, boolean inRecipeBook) {
+        this(key, ingredients, result, shapeless, inRecipeBook, (crafter) -> true);
+    }
+
     public @NotNull NamespacedKey getKey() {
         return this.key;
     }
