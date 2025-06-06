@@ -52,6 +52,10 @@ public class CraftingRecipe {
         return this.shapeless;
     }
 
+    public boolean showInRecipeBook() {
+        return this.inRecipeBook;
+    }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isCustom() {
         return !this.inRecipeBook || Arrays.stream(this.ingredients).anyMatch(ingredient -> ingredient != null && ingredient.hasMeta());
@@ -181,13 +185,18 @@ public class CraftingRecipe {
 
     public static class Builder {
         private final NamespacedKey key;
-        private final DisplayItemStack[] ingredients = new DisplayItemStack[9];
+        private DisplayItemStack[] ingredients = new DisplayItemStack[9];
         private DisplayItemStack result;
         private boolean shapeless = false;
         private boolean inRecipeBook = true;
 
         private Builder(@NotNull NamespacedKey key) {
             this.key = key;
+        }
+
+        public Builder ingredients(DisplayItemStack[] ingredients) {
+            this.ingredients = ingredients;
+            return this;
         }
 
         /**
