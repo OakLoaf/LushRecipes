@@ -1,5 +1,5 @@
 dependencies {
-    api("org.lushplugins:LushLib:0.10.73")
+    api("org.lushplugins:LushLib:0.10.76")
 }
 
 publishing {
