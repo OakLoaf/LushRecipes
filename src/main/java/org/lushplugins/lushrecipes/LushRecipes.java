@@ -31,16 +31,6 @@ public final class LushRecipes extends SpigotPlugin {
         this.recipeHandler = RecipeAPI.builder(this).build();
         this.guiHandler = GuiHandler.builder(this)
             .registerLabelProvider(' ', new SlotProvider())
-            .registerLabelProvider('>', new SlotProvider().button((context) -> context.gui().nextPage()))
-            .registerLabelProvider('<', new SlotProvider().button((context) -> {
-                if (context.gui().page() > 1) {
-                    context.gui().previousPage();
-                }
-            }))
-            .registerLabelProvider('b', new SlotProvider().button((context) -> {
-                LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
-                    .open(context.gui().actor().player());
-            }))
             .build();
 
         this.configManager = new ConfigManager();

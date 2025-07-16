@@ -86,4 +86,11 @@ public class RecipesGui {
             gui.nextPage();
         }
     }
+
+    @ButtonProvider('<')
+    public void prevPageButton(Gui gui) {
+        if (gui.page() > 1) {
+            gui.previousPage();
+        }
+    }
 }

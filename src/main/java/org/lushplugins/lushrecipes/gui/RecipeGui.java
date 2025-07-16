@@ -38,7 +38,7 @@ public class RecipeGui {
     }
 
     @ButtonProvider('b')
-    public void returnToMainMenu(GuiActor actor) {
+    public void backButton(GuiActor actor) {
         LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint().open(actor.player());
     }
 }
