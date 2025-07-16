@@ -11,6 +11,7 @@ import org.lushplugins.lushlib.utils.DisplayItemStack;
 import org.lushplugins.lushlib.utils.YamlUtils;
 import org.lushplugins.lushlib.utils.converter.YamlConverter;
 import org.lushplugins.lushrecipes.LushRecipes;
+import org.lushplugins.lushrecipes.api.event.PostPopulateRecipesEvent;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
 import org.lushplugins.lushrecipes.gui.RecipeGui;
 import org.lushplugins.lushrecipes.gui.RecipesGui;
@@ -52,6 +53,7 @@ public class ConfigManager {
         loadRecipesFromDirectory(new File(LushRecipes.getInstance().getDataFolder(), "recipes"));
 
         applyRecipes();
+        Bukkit.getServer().getPluginManager().callEvent(new PostPopulateRecipesEvent(LushRecipes.getInstance().getRecipeHandler()));
 
         ConfigurationSection recipesGuiSection = config.getConfigurationSection("recipes-gui");
         this.recipesGuiBlueprint = YamlUtil.prepareGuiBuilder(recipesGuiSection, new RecipesGui());
