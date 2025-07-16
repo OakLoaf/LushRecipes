@@ -2,7 +2,6 @@ package org.lushplugins.lushrecipes.gui;
 
 import com.google.common.collect.Streams;
 import org.bukkit.entity.Player;
-import org.lushplugins.guihandler.annotation.ButtonProvider;
 import org.lushplugins.guihandler.annotation.CustomGui;
 import org.lushplugins.guihandler.annotation.GuiEvent;
 import org.lushplugins.guihandler.annotation.Slots;
@@ -25,13 +24,9 @@ import java.util.stream.Collectors;
 public class RecipesGui {
 
     @GuiEvent(GuiAction.REFRESH)
-    public void recipes(GuiActor actor, @Slots('r') List<Slot> slots) {
-        ArrayDeque<CraftingRecipe> recipes = Streams.concat(
-                LushRecipes.getInstance().getRecipeHandler().getRecipes().stream(),
-                LushRecipes.getInstance().getConfigManager().getVisualRecipes().stream())
-            .filter(recipe -> recipe.canCraft(actor.player()))
-            .sorted(Comparator.comparing(o -> o.getKey().asString()))
-            .collect(Collectors.toCollection(ArrayDeque::new));
+    public void recipes(Gui gui, @Slots('r') List<Slot> slots) {
+        GuiActor actor = gui.actor();
+        ArrayDeque<CraftingRecipe> recipes = getPageContent(actor, gui.page(), slots.size());
 
         for (Slot slot : slots) {
             if (recipes.isEmpty()) {
@@ -51,25 +46,26 @@ public class RecipesGui {
 
             slot.icon(result.asItemStack(actor.player()));
             slot.button((context) -> {
-                Gui.Builder gui = LushRecipes.getInstance().getConfigManager().getRecipeGuiBlueprint();
+                Gui.Builder recipeGui = LushRecipes.getInstance().getConfigManager().getRecipeGuiBlueprint();
 
                 Player player = context.gui().actor().player();
                 if (recipe.getResult().hasDisplayName()) {
-                    gui.openWith(player, recipe.getResult().getDisplayName(), recipe);
+                    recipeGui.openWith(player, recipe.getResult().getDisplayName(), recipe);
                 } else {
-                    gui.open(player, recipe);
+                    recipeGui.open(player, recipe);
                 }
             });
         }
     }
 
-    @ButtonProvider('>')
-    public void nextPage(Gui gui) {
-        gui.nextPage();
-    }
-
-    @ButtonProvider('<')
-    public void previousPage(Gui gui) {
-        gui.previousPage();
+    private ArrayDeque<CraftingRecipe> getPageContent(GuiActor actor, int page, int pageSize) {
+        return Streams.concat(
+                LushRecipes.getInstance().getRecipeHandler().getRecipes().stream(),
+                LushRecipes.getInstance().getConfigManager().getVisualRecipes().stream())
+            .filter(recipe -> recipe.canCraft(actor.player()))
+            .sorted(Comparator.comparing(o -> o.getKey().asString()))
+            .skip((long) (page - 1) * pageSize)
+            .limit(pageSize)
+            .collect(Collectors.toCollection(ArrayDeque::new));
     }
 }
