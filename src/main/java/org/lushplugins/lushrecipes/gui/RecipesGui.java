@@ -2,6 +2,7 @@ package org.lushplugins.lushrecipes.gui;
 
 import com.google.common.collect.Streams;
 import org.bukkit.entity.Player;
+import org.lushplugins.guihandler.annotation.ButtonProvider;
 import org.lushplugins.guihandler.annotation.CustomGui;
 import org.lushplugins.guihandler.annotation.GuiEvent;
 import org.lushplugins.guihandler.annotation.Slots;
@@ -18,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 @CustomGui
@@ -58,14 +60,30 @@ public class RecipesGui {
         }
     }
 
-    private ArrayDeque<CraftingRecipe> getPageContent(GuiActor actor, int page, int pageSize) {
+    private Stream<CraftingRecipe> getContentStream(GuiActor actor) {
         return Streams.concat(
                 LushRecipes.getInstance().getRecipeHandler().getRecipes().stream(),
                 LushRecipes.getInstance().getConfigManager().getVisualRecipes().stream())
-            .filter(recipe -> recipe.canCraft(actor.player()))
+            .filter(recipe -> recipe.canCraft(actor.player()));
+    }
+
+    private Stream<CraftingRecipe> getPageContentStream(GuiActor actor, int page, int pageSize) {
+        return getContentStream(actor)
             .sorted(Comparator.comparing(o -> o.getKey().asString()))
             .skip((long) (page - 1) * pageSize)
-            .limit(pageSize)
-            .collect(Collectors.toCollection(ArrayDeque::new));
+            .limit(pageSize);
+    }
+
+    private ArrayDeque<CraftingRecipe> getPageContent(GuiActor actor, int page, int pageSize) {
+        return getPageContentStream(actor, page, pageSize).collect(Collectors.toCollection(ArrayDeque::new));
+    }
+
+    @ButtonProvider('>')
+    public void nextPageButton(Gui gui, @Slots('P') List<Slot> slots) {
+        int pageSize = slots.size();
+        Stream<CraftingRecipe> content = getPageContentStream(gui.actor(), gui.page(), pageSize);
+        if (content.count() == pageSize) {
+            gui.nextPage();
+        }
     }
 }

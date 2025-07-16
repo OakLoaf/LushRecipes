@@ -30,10 +30,14 @@ public final class LushRecipes extends SpigotPlugin {
     public void onEnable() {
         this.recipeHandler = RecipeAPI.builder(this).build();
         this.guiHandler = GuiHandler.builder(this)
-            .registerLabelProvider(' ', SlotProvider.create(IconProvider.EMPTY))
-            .registerLabelProvider('>', SlotProvider.create((Button) (context) -> context.gui().nextPage()))
-            .registerLabelProvider('<', SlotProvider.create((Button) (context) -> context.gui().previousPage()))
-            .registerLabelProvider('b', SlotProvider.create((context) -> {
+            .registerLabelProvider(' ', new SlotProvider())
+            .registerLabelProvider('>', new SlotProvider().button((context) -> context.gui().nextPage()))
+            .registerLabelProvider('<', new SlotProvider().button((context) -> {
+                if (context.gui().page() > 1) {
+                    context.gui().previousPage();
+                }
+            }))
+            .registerLabelProvider('b', new SlotProvider().button((context) -> {
                 LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
                     .open(context.gui().actor().player());
             }))
