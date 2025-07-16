@@ -112,6 +112,10 @@ public class ConfigManager {
         this.visualRecipes.add(recipe);
     }
 
+    public void removeVisualOnlyRecipe(CraftingRecipe recipe) {
+        this.visualRecipes.remove(recipe);
+    }
+
     /**
      * Read all drop files in a directory
      * @param directory directory to read from
