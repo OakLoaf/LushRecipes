@@ -79,7 +79,7 @@ public class RecipesGui {
     }
 
     @ButtonProvider('>')
-    public void nextPageButton(Gui gui, @Slots('P') List<Slot> slots) {
+    public void nextPageButton(Gui gui, @Slots('r') List<Slot> slots) {
         int pageSize = slots.size();
         Stream<CraftingRecipe> content = getPageContentStream(gui.actor(), gui.page(), pageSize);
         if (content.count() == pageSize) {
