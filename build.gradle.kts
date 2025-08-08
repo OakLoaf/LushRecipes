@@ -85,7 +85,7 @@ dependencies {
     // Libraries
     implementation("io.github.revxrsal:lamp.common:4.0.0-rc.12")
     implementation("io.github.revxrsal:lamp.bukkit:4.0.0-rc.12")
-    implementation("org.lushplugins:GuiHandler:1.0.0-alpha21")
+    implementation("org.lushplugins:GuiHandler:1.0.0-alpha26")
 }
 
 tasks {
