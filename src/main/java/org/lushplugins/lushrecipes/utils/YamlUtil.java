@@ -5,9 +5,9 @@ import org.lushplugins.guihandler.gui.Gui;
 import org.lushplugins.guihandler.gui.GuiLayer;
 import org.lushplugins.guihandler.slot.Button;
 import org.lushplugins.guihandler.slot.SlotProvider;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
-import org.lushplugins.lushlib.utils.YamlUtils;
-import org.lushplugins.lushlib.utils.converter.YamlConverter;
+import org.lushplugins.lushlib.config.YamlConverter;
+import org.lushplugins.lushlib.config.YamlUtils;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 import org.lushplugins.lushrecipes.LushRecipes;
 
 public class YamlUtil {

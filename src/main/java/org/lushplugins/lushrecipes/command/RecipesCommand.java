@@ -1,6 +1,6 @@
 package org.lushplugins.lushrecipes.command;
 
-import org.lushplugins.lushlib.libraries.chatcolor.ChatColorHandler;
+import org.lushplugins.chatcolorhandler.paper.PaperColor;
 import org.lushplugins.lushrecipes.LushRecipes;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
@@ -22,6 +22,6 @@ public class RecipesCommand {
     @CommandPermission("lushrecipes.reload")
     public void reload(BukkitCommandActor actor) {
         LushRecipes.getInstance().getConfigManager().reloadConfig();
-        ChatColorHandler.sendMessage(actor.sender(), "&#b7faa2LushRecipes has been reloaded &#66b04f🔃");
+        PaperColor.handler().sendMessage(actor.sender(), "&#b7faa2LushRecipes has been reloaded &#66b04f🔃");
     }
 }

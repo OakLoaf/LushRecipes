@@ -8,7 +8,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 
 import java.util.*;
 import java.util.function.Predicate;

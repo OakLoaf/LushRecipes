@@ -7,7 +7,7 @@ import org.lushplugins.guihandler.annotation.IconProvider;
 import org.lushplugins.guihandler.annotation.Provided;
 import org.lushplugins.guihandler.gui.GuiActor;
 import org.lushplugins.guihandler.slot.Slot;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 import org.lushplugins.lushrecipes.LushRecipes;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
 import org.lushplugins.lushrecipes.utils.CustomItemNaming;

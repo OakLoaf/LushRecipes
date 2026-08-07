@@ -1,11 +1,8 @@
 package org.lushplugins.lushrecipes;
 
 import org.lushplugins.guihandler.GuiHandler;
-import org.lushplugins.guihandler.slot.Button;
-import org.lushplugins.guihandler.slot.IconProvider;
 import org.lushplugins.guihandler.slot.SlotProvider;
-import org.lushplugins.lushlib.LushLib;
-import org.lushplugins.lushlib.plugin.SpigotPlugin;
+import org.lushplugins.lushlib.utils.plugin.SpigotPlugin;
 import org.lushplugins.lushrecipes.api.RecipeAPI;
 import org.lushplugins.lushrecipes.command.RecipesCommand;
 import org.lushplugins.lushrecipes.config.ConfigManager;
@@ -23,8 +20,8 @@ public final class LushRecipes extends SpigotPlugin {
 
     @Override
     public void onLoad() {
+        super.onLoad();
         plugin = this;
-        LushLib.getInstance().enable(this);
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 import org.lushplugins.lushrecipes.api.RecipeAPI;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
 

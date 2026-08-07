@@ -1,7 +1,7 @@
 package org.lushplugins.lushrecipes.utils;
 
 import org.bukkit.Material;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 
 public class CustomItemNaming {
 

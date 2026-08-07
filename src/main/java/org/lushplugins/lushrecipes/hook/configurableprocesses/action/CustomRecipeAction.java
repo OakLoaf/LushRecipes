@@ -8,9 +8,9 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
 import org.lushplugins.configurableprocesses.process.action.ConfigurableAction;
 import org.lushplugins.configurableprocesses.process.eventdata.EventData;
-import org.lushplugins.lushlib.utils.DisplayItemStack;
-import org.lushplugins.lushlib.utils.YamlUtils;
-import org.lushplugins.lushlib.utils.converter.YamlConverter;
+import org.lushplugins.lushlib.config.YamlConverter;
+import org.lushplugins.lushlib.config.YamlUtils;
+import org.lushplugins.lushlib.item.DisplayItemStack;
 import org.lushplugins.lushrecipes.LushRecipes;
 import org.lushplugins.lushrecipes.api.recipe.CraftingRecipe;
 
