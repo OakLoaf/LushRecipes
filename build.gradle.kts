@@ -19,6 +19,7 @@ allprojects {
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://repo.papermc.io/repository/maven-public/") // Paper
         maven("https://repo.lushplugins.org/snapshots") // LushLib
+        maven("https://repo.lushplugins.org/hidden") // ConfigurableProcesses
     }
 
     dependencies {
@@ -78,6 +79,7 @@ allprojects {
 
 dependencies {
     // Soft Dependencies
+    compileOnly("org.lushplugins:ConfigurableProcesses-Plugin:4.0.0")
 
     // Modules
     implementation(project(":api"))

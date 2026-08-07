@@ -9,6 +9,7 @@ import org.lushplugins.lushlib.plugin.SpigotPlugin;
 import org.lushplugins.lushrecipes.api.RecipeAPI;
 import org.lushplugins.lushrecipes.command.RecipesCommand;
 import org.lushplugins.lushrecipes.config.ConfigManager;
+import org.lushplugins.lushrecipes.hook.configurableprocesses.ConfigurableProcessesHook;
 import revxrsal.commands.Lamp;
 import revxrsal.commands.bukkit.BukkitLamp;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
@@ -38,6 +39,8 @@ public final class LushRecipes extends SpigotPlugin {
 
         Lamp<BukkitCommandActor> lamp = BukkitLamp.builder(this).build();
         lamp.register(new RecipesCommand());
+
+        ifPluginPresent("ConfigurableProcesses", () -> ConfigurableProcessesHook.register(this));
     }
 
     @Override
