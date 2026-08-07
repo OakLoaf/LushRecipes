@@ -24,17 +24,17 @@ public class YamlUtil {
 
             char label = buttonSection.getName().charAt(0);
             Button button = switch (buttonSection.getString("type")) {
-                case "back" -> (context) -> LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
+                case "back" -> (event, context) -> LushRecipes.getInstance().getConfigManager().getRecipesGuiBlueprint()
                     .open(context.gui().actor().player());
-                case "previous_page" -> (context) -> context.gui().previousPage();
-                case "next_page" -> (context) -> context.gui().nextPage();
+                case "previous_page" -> (event, context) -> context.gui().previousPage();
+                case "next_page" -> (event, context) -> context.gui().nextPage();
                 case null, default -> Button.EMPTY;
             };
 
-            layer.setSlotProvider(label, new SlotProvider(
-                (context) -> item.hasType() ? item.asItemStack(context.gui().actor().player()) : null,
-                button
-            ));
+            layer.setSlotProvider(label, SlotProvider.builder()
+                .iconProvider((context) -> item.hasType() ? item.asItemStack(context.gui().actor().player()) : null)
+                .button(button)
+                .build());
 
             if (label == 'r') {
                 LushRecipes.getInstance().getConfigManager().setRecipeTemplate(item);

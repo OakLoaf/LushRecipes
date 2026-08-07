@@ -47,7 +47,7 @@ public class RecipesGui {
             }
 
             slot.icon(result.asItemStack(actor.player()));
-            slot.button((context) -> {
+            slot.button((event, context) -> {
                 Gui.Builder recipeGui = LushRecipes.getInstance().getConfigManager().getRecipeGuiBlueprint();
 
                 Player player = context.gui().actor().player();

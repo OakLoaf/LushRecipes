@@ -31,7 +31,7 @@ public final class LushRecipes extends SpigotPlugin {
     public void onEnable() {
         this.recipeHandler = RecipeAPI.builder(this).build();
         this.guiHandler = GuiHandler.builder(this)
-            .registerLabelProvider(' ', new SlotProvider())
+            .registerLabelProvider(' ', SlotProvider.EMPTY)
             .build();
 
         this.configManager = new ConfigManager();
