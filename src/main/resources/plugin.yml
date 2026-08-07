@@ -2,3 +2,4 @@ name: LushRecipes
 version: ${project.version}
 main: org.lushplugins.lushrecipes.LushRecipes
 api-version: '1.17'
+github-repo: OakLoaf/LushRecipes
