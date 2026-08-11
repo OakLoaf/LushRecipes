@@ -79,7 +79,7 @@ allprojects {
 
 dependencies {
     // Soft Dependencies
-    compileOnly("org.lushplugins:ConfigurableProcesses-Plugin:4.0.0")
+    compileOnly("org.lushplugins:ConfigurableProcesses-Plugin:4.0.2")
 
     // Modules
     implementation(project(":api"))
